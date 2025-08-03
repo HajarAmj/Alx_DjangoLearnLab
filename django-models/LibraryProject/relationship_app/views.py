@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
 from django.contrib.auth import login
 from django.contrib.auth import logout
@@ -46,6 +47,25 @@ class LibraryDetailView(DetailView):
     template_name = 'relationship_app/library_detail.html'
     context_object_name = 'library'
 
+from django.contrib.auth.decorators import user_passes_test
+from django.shortcuts import render
+
+def role_check(role):
+    def check(user):
+        return hasattr(user, 'userprofile') and user.userprofile.role == role
+    return check
+
+@user_passes_test(role_check('Admin'))
+def admin_view(request):
+    return render(request, 'relationship_app/admin_view.html')
+
+@user_passes_test(role_check('Librarian'))
+def librarian_view(request):
+    return render(request, 'relationship_app/librarian_view.html')
+
+@user_passes_test(role_check('Member'))
+def member_view(request):
+    return render(request, 'relationship_app/member_view.html')
 
 
 
