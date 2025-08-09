@@ -17,6 +17,7 @@ INSTALLED_APPS = [
     'bookshelf',
     # 'relationship_app',  # temporarily disabled
 ]
+AUTH_USER_MODEL = 'bookshelf.CustomUser'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
