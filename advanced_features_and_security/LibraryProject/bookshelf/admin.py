@@ -4,7 +4,6 @@ from bookshelf.models import CustomUser
 from django.utils.translation import gettext_lazy as _
 
 
-@admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
     fieldsets = (
@@ -25,3 +24,4 @@ class CustomUserAdmin(UserAdmin):
     search_fields = ('username', 'first_name', 'last_name', 'email')
     ordering = ('username',)
 
+admin.site.register(CustomUser, CustomUserAdmin)
