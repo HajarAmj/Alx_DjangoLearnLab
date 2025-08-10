@@ -4,8 +4,9 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-g*&8nlb*yokln(ix-hj1lpw!-fpin13n!68-b32&dey77mw&&_'
-DEBUG = True
-ALLOWED_HOSTS = []
+DEBUG = os.environ.get("DJANGO_DEBUG", "False") == "True"
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "yourdomain.com,www.yourdomain.com").split(",")
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -14,6 +15,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
     'bookshelf',
     # 'relationship_app',  # temporarily disabled
 ]
@@ -63,7 +65,8 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
         'OPTIONS': {
-            'min_length': 8,  # Increased minimum length for better security
+            'min_length': 8,
+        }  
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
@@ -106,8 +109,12 @@ if not DEBUG:
 
 # CSRF Protection Settings
 CSRF_COOKIE_NAME = 'csrftoken'
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_HTTPONLY = False
+CSRF_COOKIE_SAMESITE = "Lax"
 CSRF_HEADER_NAME = 'HTTP_X_CSRFTOKEN'
-CSRF_TRUSTED_ORIGINS = []  # Add your trusted origins here in production
+CSRF_TRUSTED_ORIGINS = ["https://yourdomain.com",
+    "https://www.yourdomain.com",]  # Add your trusted origins here in production
 
 # Content Security Policy (CSP) Settings - Manual Implementation
 # Note: You can install django-csp package for more advanced CSP handling
@@ -127,7 +134,12 @@ SECURE_REFERRER_POLICY = 'same-origin'
 # Session Security
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_AGE = 3600  # 1 hour session timeout
+SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SAMESITE = "Lax"  # or "Strict" if possible
 SESSION_SAVE_EVERY_REQUEST = True  # Refresh session on every request
+SECURE_CONTENT_TYPE_NOSNIFF = True      # X-Content-Type-Options: nosniff
+SECURE_BROWSER_XSS_FILTER = True        # X-XSS-Protection header (legacy)
+X_FRAME_OPTIONS = "DENY"   
 
 # Login/Logout URLs
 LOGIN_URL = '/accounts/login/'
@@ -256,3 +268,31 @@ SECURE_BROWSER_XSS_FILTER = True
 #         },
 #     }
 # }
+# --------------------------
+# HTTPS & SECURITY SETTINGS
+# --------------------------
+
+# Redirect all HTTP traffic to HTTPS
+SECURE_SSL_REDIRECT = True  # ✅ Forces HTTPS
+
+# Enable HTTP Strict Transport Security (HSTS)
+SECURE_HSTS_SECONDS = 31536000  # 1 year in seconds
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+# Secure cookies
+SESSION_COOKIE_SECURE = True     # ✅ Session cookies sent only over HTTPS
+CSRF_COOKIE_SECURE = True        # ✅ CSRF cookies sent only over HTTPS
+
+# Additional security headers
+X_FRAME_OPTIONS = "DENY"         # ✅ Protects against clickjacking
+SECURE_CONTENT_TYPE_NOSNIFF = True  # ✅ Prevents MIME type sniffing
+SECURE_BROWSER_XSS_FILTER = True    # ✅ Enables basic XSS filter in browsers
+
+# Optional: Ensure cookies are HTTPOnly to prevent JavaScript access
+SESSION_COOKIE_HTTPONLY = True
+CSRF_COOKIE_HTTPONLY = True
+
+if not DEBUG:
+    # ... settings here ...
+     pass   

@@ -45,7 +45,7 @@ class BookListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         messages.error(self.request, "You don't have permission to view books.")
         return redirect('home')
 
-   def get_queryset(self):
+    def get_queryset(self):
         """
         Secure queryset with search functionality.
         Uses Django ORM to prevent SQL injection.
