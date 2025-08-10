@@ -90,6 +90,24 @@ class BookListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         return context
 
 @csrf_protect
+def example_form_view(request):
+    """
+    View to handle ExampleForm submission securely.
+    """
+    if request.method == "POST":
+        form = ExampleForm(request.POST)
+        if form.is_valid():
+            # Safe handling of cleaned data
+            name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+            message = form.cleaned_data['message']
+            # Here, you'd normally save or process the data securely
+            return redirect('bookshelf:book_list')
+    else:
+        form = ExampleForm()
+    return render(request, 'bookshelf/form_example.html', {'form': form})
+
+@csrf_protect
 @login_required
 @permission_required('bookshelf.can_view', raise_exception=True)
 def book_detail_view(request, pk):

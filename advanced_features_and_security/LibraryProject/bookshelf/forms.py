@@ -99,6 +99,11 @@ def validate_publication_year(value):
 # SECURE FORM CLASSES
 # ============================================================================
 
+class ExampleForm(forms.Form):
+    name = forms.CharField(max_length=100, required=True)
+    email = forms.EmailField(required=True)
+    message = forms.CharField(widget=forms.Textarea, required=True)
+
 class BookForm(forms.ModelForm):
     """
     Secure form for creating and editing books.
