@@ -13,7 +13,7 @@ from django.utils.html import escape
 from django.core.paginator import Paginator
 from django.db import transaction
 import logging
-
+from .forms import ExampleForm, BookForm, SearchForm
 from .models import Book, Library, BookReview
 from .forms import BookForm, LibraryForm, BookReviewForm, BookSearchForm
 
