@@ -1,0 +1,22 @@
+{# templates/bookshelf/form_example.html #}
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+  <h2>Add a book</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div>
+      {{ form.title.label_tag }}<br>
+      {{ form.title }}
+      {{ form.title.errors }}
+    </div>
+    <div>
+      {{ form.author.label_tag }}<br>
+      {{ form.author }}
+      {{ form.author.errors }}
+    </div>
+    <button type="submit">Save</button>
+  </form>
+{% endblock %}

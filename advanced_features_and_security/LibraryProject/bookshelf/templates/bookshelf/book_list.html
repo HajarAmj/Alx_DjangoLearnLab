@@ -1,16 +1,20 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Bookshelf</title>
-</head>
-<body>
-    <h1>Bookshelf</h1>
-    <ul>
-        {% for book in books %}
-            <li>{{ book.title }} by {{ book.author }} ({{ book.publication_year }})</li>
-        {% empty %}
-            <li>No books available.</li>
-        {% endfor %}
-    </ul>
-</body>
-</html>
+{% extends 'base.html' %}
+{% block content %}
+  <h1>Bookshelf</h1>
+
+  <form method="get" action="." role="search">
+    {{ form.q.label_tag }}
+    <input name="q" value="{{ form.q.value|default_if_none:''|escape }}" />
+    <button type="submit">Search</button>
+  </form>
+
+  <ul>
+    {% for book in books %}
+      <li>
+        <strong>{{ book.title|escape }}</strong> by {{ book.author|escape }} ({{ book.publication_year|escape }})
+      </li>
+    {% empty %}
+      <li>No books available.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}
