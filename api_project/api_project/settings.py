@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     
     # third-party
     'rest_framework',
+    'rest_framework.authtoken',
 
     # local apps
     'api',
@@ -73,6 +74,20 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'api_project.wsgi.application'
+
+
+# Configure Django REST Framework to use token authentication
+# Users must provide a token in the Authorization header to access the API
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        # You can keep other authentication classes if needed:
+        # 'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    )
+}
 
 
 # Database
