@@ -3,6 +3,7 @@ from django.db.models import QuerySet
 from rest_framework import generics, permissions, filters
 from rest_framework.exceptions import ValidationError
 from rest_framework.parsers import JSONParser, FormParser, MultiPartParser
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 
 from .models import Book
 from .serializers import BookSerializer
