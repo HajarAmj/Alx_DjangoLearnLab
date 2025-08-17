@@ -4,16 +4,21 @@ from rest_framework import generics, permissions, filters
 from rest_framework.exceptions import ValidationError
 from rest_framework.parsers import JSONParser, FormParser, MultiPartParser
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
+from rest_framework.filters import OrderingFilter
 
 from .models import Book
 from .serializers import BookSerializer
 
 
 class BookListView(generics.ListAPIView):
-    """
-    GET /api/books/
-    - Public, read-only list of books.
-    - Supports ?search=, ?ordering= for simple filtering/sorting.
+   """
+    List all books with advanced query capabilities:
+    - Filtering: /api/books/?title=Python
+    - Searching: /api/books/?search=Python
+    - Ordering: /api/books/?ordering=-publication_year
+    Multiple query params can be combined.
     """
     queryset: QuerySet[Book] = Book.objects.select_related('author').all()
     serializer_class = BookSerializer
