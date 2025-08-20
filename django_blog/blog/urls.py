@@ -9,14 +9,18 @@ from .views import (
 )
 
 urlpatterns = [
+    # Authentication URLs
     path('login/', UserLoginView.as_view(), name='login'),
     path('logout/', UserLogoutView.as_view(), name='logout'),
     path('register/', register, name='register'),
     path('profile/', profile, name='profile'),
     path('profile/edit/', profile_edit, name='profile_edit'),
-    path('posts/', PostListView.as_view(), name='post-list'),
-    path('posts/new/', PostCreateView.as_view(), name='post-create'),
-    path('posts/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
-    path('post/<int:pk>/update/', PostUpdateView.as_view(), name='post-update'),
-    path('posts/<int:pk>/delete/', PostDeleteView.as_view(), name='post-delete'),
+
+    # Blog post URLs
+    path('posts/', PostListView.as_view(), name='post-list'),              # list view can stay plural
+    path('post/new/', PostCreateView.as_view(), name='post-create'),       # singular 'post/'
+    path('post/<int:pk>/', PostDetailView.as_view(), name='post-detail'),  # singular 'post/'
+    path('post/<int:pk>/update/', PostUpdateView.as_view(), name='post-update'), 
+    path('post/<int:pk>/delete/', PostDeleteView.as_view(), name='post-delete'),
 ]
+
