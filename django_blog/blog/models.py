@@ -29,3 +29,31 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"Profile({self.user.username})"
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(
+        'Post', # or replace with the correct app label if Post is elsewhere
+        on_delete=models.CASCADE,
+        related_name='comments'
+    )
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='comments'
+    )
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+    class Meta:
+        ordering = ['created_at'] # oldest first; change to ['-created_at'] for newest first
+
+
+    def __str__(self):
+        return f"Comment by {self.author} on {self.post}"
+
+
+    def get_absolute_url(self):
+        return reverse('blog:post_detail', kwargs={'pk': self.post.pk})

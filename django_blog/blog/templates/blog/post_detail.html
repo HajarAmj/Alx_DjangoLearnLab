@@ -11,3 +11,37 @@
 
 <a href="{% url 'post-list' %}">Back to all posts</a>
 {% endblock %}
+
+<h1>{{ post.title }}</h1>
+<p>{{ post.content }}</p>
+
+<section id="comments">
+  <h2>Comments ({{ post.comments.count }})</h2>
+
+  {% for comment in post.comments.all %}
+    <div class="comment">
+      <strong>{{ comment.author }}</strong>
+      <small>{{ comment.created_at|date:"M d, Y H:i" }}</small>
+      {% if comment.updated_at != comment.created_at %}<em>(edited)</em>{% endif %}
+      <p>{{ comment.content }}</p>
+
+      {% if user.is_authenticated and comment.author == user %}
+        <a href="{% url 'blog:comment_edit' post_id=post.pk pk=comment.pk %}">Edit</a>
+        <a href="{% url 'blog:comment_delete' post_id=post.pk pk=comment.pk %}">Delete</a>
+      {% endif %}
+    </div>
+  {% empty %}
+    <p>No comments yet.</p>
+  {% endfor %}
+
+  {% if user.is_authenticated %}
+    <h3>Leave a Comment</h3>
+    <form action="{% url 'blog:comment_create' post_id=post.pk %}" method="post">
+      {% csrf_token %}
+      {{ form.content }}
+      <button type="submit">Post</button>
+    </form>
+  {% else %}
+    <p><a href="{% url 'login' %}">Login</a> to comment.</p>
+  {% endif %}
+</section>
