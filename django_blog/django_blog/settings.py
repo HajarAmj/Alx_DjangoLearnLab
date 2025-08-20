@@ -36,7 +36,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         # With APP_DIRS=True, templates inside app/templates are discovered automatically.
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -48,6 +48,10 @@ TEMPLATES = [
         },
     },
 ]
+
+LOGIN_URL = 'login' 
+LOGIN_REDIRECT_URL = 'profile' 
+LOGOUT_REDIRECT_URL = 'login'
 
 WSGI_APPLICATION = 'django_blog.wsgi.application'
 
@@ -85,6 +89,9 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
-# For app-level static, no need to set STATICFILES_DIRS; Django discovers blog/static automatically.
+STATICFILES_DIRS = [BASE_DIR / 'static']
+
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

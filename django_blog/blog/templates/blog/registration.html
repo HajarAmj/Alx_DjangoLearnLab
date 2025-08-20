@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Register • django_blog{% endblock %}
+
+{% block content %}
+<h1>Register</h1>
+
+<form method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    
+    <!-- Display form errors -->
+    {% if form.errors %}
+        <div class="errors">
+            <ul>
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    
+    <!-- Render the form fields -->
+    <div>
+        <label for="{{ form.username.id_for_label }}">Username:</label>
+        {{ form.username }}
+    </div>
+    
+    <div>
+        <label for="{{ form.email.id_for_label }}">Email:</label>
+        {{ form.email }}
+    </div>
+    
+    <div>
+        <label for="{{ form.password1.id_for_label }}">Password:</label>
+        {{ form.password1 }}
+    </div>
+    
+    <div>
+        <label for="{{ form.password2.id_for_label }}">Confirm Password:</label>
+        {{ form.password2 }}
+    </div>
+    
+    <!-- Optional: profile picture if using a custom user model -->
+    {% if form.profile_photo %}
+    <div>
+        <label for="{{ form.profile_photo.id_for_label }}">Profile Photo:</label>
+        {{ form.profile_photo }}
+    </div>
+    {% endif %}
+    
+    <button type="submit">Register</button>
+</form>
+
+<p>Already have an account? <a href="{% url 'login' %}">Login here</a>.</p>
+
+{% endblock %}

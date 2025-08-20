@@ -3,4 +3,9 @@
 {% block content %}
 <h1>Login</h1>
 <form method="post" novalidate>
-{% csrf_t
+    {% csrf_token %}
+    <!-- your form fields here -->
+    <button type="submit">Login</button>
+</form>
+{% endblock %}
+
