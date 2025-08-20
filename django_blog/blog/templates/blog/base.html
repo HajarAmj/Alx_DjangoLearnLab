@@ -9,11 +9,31 @@
 </head>
 <body>
   <header class="container">
-    <h1><a href="/">Django Blog</a></h1>
+    <nav class="nav">
+      <a href="/">Home</a>
+      {% if user.is_authenticated %}
+        <a href="{% url 'profile' %}">Profile</a>
+        <a href="{% url 'profile_edit' %}">Edit Profile</a>
+        <form action="{% url 'logout' %}" method="post" style="display:inline">{% csrf_token %}<button type="submit">Logout</button></form>
+      {% else %}
+        <a href="{% url 'login' %}">Login</a>
+        <a href="{% url 'register' %}">Register</a>
+      {% endif %}
+    </nav>
   </header>
+
+
   <main class="container">
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+
     {% block content %}{% endblock %}
   </main>
-  <script src="{% static 'blog/js/main.js' %}"></script>
 </body>
 </html>
