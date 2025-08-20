@@ -22,6 +22,10 @@
     </nav>
   </header>
 
+<form method="get" action="{% url 'search' %}" style="display:inline">
+    <input type="text" name="q" value="{{ request.GET.q|default:'' }}" placeholder="Search posts or tags...">
+    <button type="submit">Search</button>
+</form>
 
   <main class="container">
     {% if messages %}

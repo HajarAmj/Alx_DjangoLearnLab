@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Post, Comment
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -8,12 +8,56 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from .forms import PostForm
+from django.db.models import Q
+from .models import Post, Tag
+from .forms import PostForm
 
 from .forms import RegistrationForm, UserUpdateForm, ProfileUpdateForm
 
 def post_list(request):
-    posts = Post.objects.select_related('author').all()
-    return render(request, 'blog/index.html', {'posts': posts})
+    posts = Post.objects.all().order_by('-created_at')
+    return render(request, 'blog/post_list.html', {'posts': posts})
+
+def post_detail(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    return render(request, 'blog/post_detail.html', {'post': post})
+
+def post_create(request):
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save()
+            return redirect(post.get_absolute_url())
+    else:
+        form = PostForm()
+    return render(request, 'blog/post_form.html', {'form': form})
+
+def post_update(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            post = form.save()
+            return redirect(post.get_absolute_url())
+    else:
+        form = PostForm(instance=post)
+    return render(request, 'blog/post_form.html', {'form': form, 'post': post})
+
+def posts_by_tag(request, tag_slug):
+    tag = get_object_or_404(Tag, slug=tag_slug)
+    posts = tag.posts.all().order_by('-created_at')
+    return render(request, 'blog/posts_by_tag.html', {'tag': tag, 'posts': posts})
+
+def search(request):
+    q = request.GET.get('q', '').strip()
+    results = Post.objects.none()
+    if q:
+        results = Post.objects.filter(
+            Q(title__icontains=q) |
+            Q(content__icontains=q) |
+            Q(tags__name__icontains=q)
+        ).distinct().order_by('-created_at')
+    return render(request, 'blog/search_results.html', {'query': q, 'results': results})
 
 
 class UserLoginView(LoginView):

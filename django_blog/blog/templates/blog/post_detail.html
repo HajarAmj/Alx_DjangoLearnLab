@@ -45,3 +45,19 @@
     <p><a href="{% url 'login' %}">Login</a> to comment.</p>
   {% endif %}
 </section>
+
+<article>
+  <h1>{{ post.title }}</h1>
+  <p>{{ post.content }}</p>
+
+  <p>Tags:
+    {% for tag in post.tags.all %}
+      <a href="{% url 'posts_by_tag' tag.slug %}" class="tag">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
+    {% empty %}
+      <em>No tags</em>
+    {% endfor %}
+  </p>
+
+  <p><a href="{% url 'post_update' post.pk %}">Edit</a></p>
+</article>
+{% endblock %}
