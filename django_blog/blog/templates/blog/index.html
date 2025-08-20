@@ -1,0 +1,18 @@
+{% extends 'blog/base.html' %}
+{% block title %}Home | Django Blog{% endblock %}
+{% block content %}
+  <h2>Latest Posts</h2>
+  <ul class="posts">
+    {% for post in posts %}
+      <li class="post">
+        <h3>{{ post.title }}</h3>
+        <div class="meta">
+          by {{ post.author.username }} — {{ post.published_date|date:"Y-m-d H:i" }}
+        </div>
+        <p>{{ post.content|truncatechars:200 }}</p>
+      </li>
+    {% empty %}
+      <li>No posts yet. Log in to admin and add one!</li>
+    {% endfor %}
+  </ul>
+{% endblock %}
