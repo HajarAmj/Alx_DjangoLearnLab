@@ -2,6 +2,11 @@ from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from .models import CustomUser
+from .serializers import FollowSerializer
 
 from .serializers import RegisterSerializer, LoginSerializer, UserSerializer
 
@@ -31,3 +36,20 @@ class ProfileView(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         return self.request.user
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = CustomUser.objects.all()
+    serializer_class = FollowSerializer
+    permission_classes = [IsAuthenticated]
+
+    @action(detail=True, methods=['post'])
+    def follow(self, request, pk=None):
+        target_user = self.get_object()
+        request.user.following.add(target_user)
+        return Response({'status': f'You are now following {target_user.username}'})
+
+    @action(detail=True, methods=['post'])
+    def unfollow(self, request, pk=None):
+        target_user = self.get_object()
+        request.user.following.remove(target_user)
+        return Response({'status': f'You have unfollowed {target_user.username}'})

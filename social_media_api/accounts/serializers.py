@@ -76,3 +76,11 @@ class LoginSerializer(serializers.Serializer):
         attrs['user'] = user
         return attrs
 
+from rest_framework import serializers
+from .models import CustomUser
+
+class FollowSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'username', 'following', 'followers']
+        read_only_fields = ['id', 'username', 'followers']
