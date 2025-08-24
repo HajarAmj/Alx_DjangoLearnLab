@@ -3,9 +3,10 @@ from .models import Post, Comment, Tag
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'published_date')
+    list_display = ('title', 'author', 'published_date', 'created_at')
     search_fields = ('title', 'content', 'author__username')
-    list_filter = ('published_date',)
+    list_filter = ('published_date','created_at')
+    filter_horizontal = ('tags',)
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
@@ -17,9 +18,3 @@ class CommentAdmin(admin.ModelAdmin):
 class TagAdmin(admin.ModelAdmin):
     list_display = ('name', 'slug')
     prepopulated_fields = {'slug': ('name',)}
-
-@admin.register(Post)
-class PostAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'created_at')
-    search_fields = ('title', 'content')
-    filter_horizontal = ('tags',)  # nice widget to pick tags
