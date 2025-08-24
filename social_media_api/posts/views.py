@@ -53,8 +53,13 @@ def like_post(request, pk):
     
     # Create notification
     if post.author != request.user:
-        create_notification(actor=request.user, recipient=post.author, verb='liked your post', target=post)
-    
+         Notification.objects.create(
+            actor=request.user,
+            recipient=post.author,
+            verb='liked your post',
+            target_content_type=ContentType.objects.get_for_model(post),
+            target_object_id=post.id
+
     return Response({"detail": "Post liked successfully."}, status=status.HTTP_201_CREATED)
 
 @api_view(['POST'])
