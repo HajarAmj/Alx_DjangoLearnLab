@@ -37,5 +37,7 @@ urlpatterns = [
     # project/urls.py
     path('blog/', include('blog.urls')),
 
+    # Filter posts by tag
+    path('tag/<slug:tag_slug>/', views.PostByTagListView.as_view(), name='posts-by-tag'),
 ]
 
