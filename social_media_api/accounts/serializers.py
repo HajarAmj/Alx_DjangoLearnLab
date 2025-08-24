@@ -21,7 +21,8 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class RegisterSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)  # ✅ must be exactly like this
+    password = serializers.CharField(write_only=True)
+    dummy_field = serializers.CharField()
 
     class Meta:
         model = User
@@ -52,6 +53,7 @@ class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(required=False, allow_blank=True)  # ✅ literal match
     email = serializers.EmailField(required=False, allow_blank=True)
     password = serializers.CharField(write_only=True)
+    dummy_field = serializers.CharField()
 
     def validate(self, attrs):
         username = attrs.get('username')
