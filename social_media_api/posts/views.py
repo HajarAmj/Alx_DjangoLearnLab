@@ -8,6 +8,7 @@ from .serializers import PostSerializer
 from notifications.models import Notification
 from notifications.utils import create_notification
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework import status, generics
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
@@ -45,7 +46,7 @@ class FeedView(generics.ListAPIView):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def like_post(request, pk):
-    post = get_object_or_404(Post, pk=pk)
+    post = generics.get_object_or_404(Post, pk=pk)
     like, created = Like.objects.get_or_create(user=request.user, post=post)
     
     if not created:
